@@ -1,0 +1,4 @@
+2018-05-26 19:21:47,240 INFO (StartupInfoLogger.java:50)- Starting FairytailApplicationTests on MacBookPro-Knight.local with PID 69404 (started by knight in /Users/knight/fairytail)
+2018-05-26 19:21:47,243 DEBUG (StartupInfoLogger.java:53)- Running with Spring Boot v2.0.2.RELEASE, Spring v5.0.6.RELEASE
+2018-05-26 19:21:47,244 INFO (SpringApplication.java:659)- No active profile set, falling back to default profiles: default
+2018-05-26 19:21:51,229 INFO (StartupInfoLogger.java:59)- Started FairytailApplicationTests in 5.265 seconds (JVM running for 8.663)

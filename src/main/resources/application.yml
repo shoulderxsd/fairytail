@@ -1,0 +1,143 @@
+spring:
+  redis:
+    # Redis数据库索引（默认为0）
+    database: 0
+    host: localhost
+    port: 6379
+    password:
+    jedis:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制）
+        max-active: 8
+        # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        max-wait: -1
+        # 连接池中的最大空闲连接
+        min-idle: 8
+    lettuce:
+      # 连接超时时间（毫秒）
+      shutdown-timeout: 0
+
+  datasource:
+    # mysql-druid
+    # 官方bug:druid-spring-boot-starter-1.1.9  IDE提示会找不到包-web-stat-filter和stat-view-servlet
+    druid:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/fairytail?serverTimezone=UTC&useUnicode=true&characterEncoding=utf8&useSSL=false
+      username: root
+      password: pengcheng
+      initial-size: 5
+      # 最大连接池数量
+      max-active: 20
+      # 最小连接池数量
+      min-idle: 5
+      # max-wait不再使用
+
+      # 获取连接时最大等待时间,单位毫秒
+      # 配置了maxWait之后,缺省启用公平锁,并发效率会有所下降,如果需要可以通过配置useUnfairLock属性为true使用非公平锁
+      max-wait-thread-count: 60000
+      # 间隔多久才进行一次检测,检测需要关闭的空闲连接,单位是毫秒
+      time-between-eviction-runs-millis: 60000
+      # 一个连接在池中最小生存的时间,单位是毫秒
+      min-evictable-idle-time-millis: 300000
+      # 用来检测连接是否有效的sql,要求是一个查询语句,常用select 'x'
+      # 如果validationQuery为null,testOnBorrow,testOnReturn,testWhileIdle都不会其作用
+      validation-query: SELECT 1
+      # 申请连接时执行validationQuery检测连接是否有效,做了这个配置会降低性能
+      test-on-borrow: true
+      # 归还连接时执行validationQuery检测连接是否有效,做了这个配置会降低性能
+      test-on-return: false
+      # 建议配置为true,不影响性能,并且保证安全性
+      # 申请连接的时候检测,如果空闲时间大于timeBetweenEvictionRunsMillis,执行validationQuery检测连接是否有效
+      test-while-idle: true
+      # 是否缓存preparedStatement,也就是PSCache
+      # PSCache对支持游标的数据库性能提升巨大,比如说oracle;在mysql下建议关闭,default=false
+      pool-prepared-statements: false
+      # 要启用PSCache,必须配置大于0,当大于0时,poolPreparedStatements自动触发修改为true
+      # 在Druid中,不会存在Oracle下PSCache占用内存过多的问题,可以把这个数值配置大一些,比如说100
+      max-pool-prepared-statement-per-connection-size: 20
+      # 属性类型是字符串,通过别名的方式配置扩展插件
+      # 常用的插件有: 监控统计用的filter:stat 日志用的filter:log4j 防御sql注入的filter:wall
+      filters: stat,wall,slf4j
+      # 合并多个DruidDataSource的监控数据
+      use-global-data-source-stat: true
+      # 配置web-stat-filter
+      web-stat-filter:
+        enabled: true
+        url-pattern: /*
+        # 采用官方直接写入 *.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/* 会报错
+        exclusions: /*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*
+        # 配置principalSessionName,使得druid能够知道当前的cookie的用户是谁
+        principal-cookie-name: USER_COOKIE
+        # 配置principalSessionName,使得druid能够知道当前的session的用户是谁
+        principal-session-name: USER_SESSION
+        # 配置profileEnable能够监控单个url调用的sql列表。
+        profile-enable: true
+        #session统计功能
+        session-stat-enable: true
+        #最大session数
+        session-stat-max-count: 100000
+      #配置StatViewServlet
+      stat-view-servlet:
+        # 允许本机登录监控页面 http://localhost:8080/fairytail/druid/login.html
+        allow: 127.0.0.1
+        enabled: true
+        login-username: root
+        login-password: pengcheng
+        url-pattern: /druid/*
+        reset-enable: true
+      filter:
+        #spring.datasource.druid.filters=slf4j
+        #配置slf4j
+        slf4j:
+          enabled: true
+          connection-log-enabled: true
+          connection-close-after-log-enabled: true
+          connection-commit-after-log-enabled: true
+          connection-connect-after-log-enabled: true
+          connection-connect-before-log-enabled: true
+          connection-log-error-enabled: true
+          data-source-log-enabled: true
+          result-set-log-enabled: true
+          statement-log-enabled: true
+        stat:
+          log-slow-sql: true
+          merge-sql: true
+          db-type: mysql
+          enabled: true
+          slow-sql-millis: 1000
+        #配置wall filter
+        wall:
+          enabled: true
+          db-type: mysql
+          config:
+            alter-table-allow: false
+            truncate-allow: false
+            drop-table-allow: false
+            # 是否允许非以上基本语句的其他语句,缺省关闭,通过这个选项就能够屏蔽DDL
+            none-base-statement-allow: false
+            # 检查UPDATE语句是否无where条件,这是有风险的,但不是SQL注入类型的风险
+            update-where-alay-true-check: true
+            # SELECT ... INTO OUTFILE 是否允许,这个是mysql注入攻击的常见手段,缺省是禁止的
+            select-into-outfile-allow: false
+            # 是否允许调用Connection.getMetadata方法,这个方法调用会暴露数据库的表信息
+            metadata-allow: true
+          # 对被认为是攻击的SQL进行LOG.error输出
+          log-violation: true
+          # 对被认为是攻击的SQL抛出SQLExcepton
+          throw-exception: true
+      #设置使用Cglib进行代理,因为部分需要代理的不是接口不适用于JDK动态代理,会报错
+      #配置Druid监控Spring包方法的调用
+      aop-patterns: com.panda.fairytail.mapper.*,com.panda.fairytail.service.*
+
+  jpa:
+    #连接池的补充设置,应用到上面所有数据源中
+    show-sql: true
+  # 设置使用Cglib进行代理,因为部分需要代理的不是接口不适用于JDK动态代理,会报错
+  aop:
+    proxy-target-class: true
+logging:
+  #logback 文件配置
+  config: classpath:logback-spring.xml
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.panda.fairytail.mapper.ProductInfoMapper">
+    <resultMap id="BaseResultMap" type="com.panda.fairytail.entity.ProductInfo" >
+        <id column="product_id" property="productId" jdbcType="VARCHAR" />
+        <result column="product_name" property="productName" jdbcType="VARCHAR" />
+        <result column="product_price" property="productPrice" jdbcType="DECIMAL" />
+        <result column="product_stock" property="productStock" jdbcType="VARCHAR"/>
+        <result column="product_descprition" property="productDescprition" jdbcType="VARCHAR"/>
+        <result column="product_icon" property="productIcon" jdbcType="INTEGER"/>
+        <result column="product_status" property="productStatus" jdbcType="TINYINT"/>
+        <result column="category_type" property="categoryType" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="getProductInfoById" parameterType="String" resultMap="BaseResultMap">
+        select *
+        from product_info
+        where product_id = #{id,jdbcType=VARCHAR};
+    </select>
+</mapper>

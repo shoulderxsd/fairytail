@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<body>
+    <div id="app">
+        {{ message }}
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'Hello Vue!'
+            }
+        })
+
+        $.ajax({
+            type : "POST",
+            url  : "http://localhost:8080/fairytail/test/001",
+            data : '001',
+            dataType :"json" ,
+            success:function(msg) {
+                alert("success");
+            },
+            error:function(err){
+                alert("request failed！");
+            }
+        });
+
+    </script>
+</body>
+</html>
